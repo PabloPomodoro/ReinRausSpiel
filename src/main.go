@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
 )
 
 func add(numbers ...float64) {
@@ -33,44 +35,47 @@ func divide(numbers ...float64) {
 		numbers[0], numbers[1], numbers[0]/numbers[1])
 }
 
+func handleInvalidInput() {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Println("Invalid input")
+	scanner.Scan()
+}
+
 func main() {
 	var num1, num2 float64
 	var operator string
 
-	fmt.Print("Enter first number: ")
-	_, err := fmt.Scanf("%f", &num1)
-	for err != nil {
-		fmt.Println("Invalid input")
-
-		var discard string
-		fmt.Scanln(&discard)
-
+	for {
 		fmt.Print("Enter first number: ")
-		_, err = fmt.Scanf("%f", &num1)
+		_, err := fmt.Scanf("%f", &num1)
+
+		if err != nil {
+			handleInvalidInput()
+			continue
+		}
+		break
 	}
 
-	fmt.Print("Enter operator (+, -, *, /): ")
-	_, err = fmt.Scanf("%s", &operator)
-	for err != nil {
-		fmt.Println("Choose operator")
-
-		var discard string
-		fmt.Scanln(&discard)
-
+	for {
 		fmt.Print("Enter operator (+, -, *, /): ")
-		_, err = fmt.Scanf("%s", &operator)
+		_, err := fmt.Scanf("%s", &operator)
+
+		if err != nil {
+			fmt.Println("Choose operator")
+			continue
+		}
+		break
 	}
 
-	fmt.Print("Enter second number: ")
-	_, err = fmt.Scanf("%f", &num2)
-	for err != nil {
-		fmt.Println("Invalid input")
-
-		var discard string
-		fmt.Scanln(&discard)
-
+	for {
 		fmt.Print("Enter second number: ")
-		_, err = fmt.Scanf("%f", &num2)
+		_, err := fmt.Scanf("%f", &num2)
+
+		if err != nil {
+			handleInvalidInput()
+			continue
+		}
+		break
 	}
 
 	switch operator {
