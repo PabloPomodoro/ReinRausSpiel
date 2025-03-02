@@ -36,9 +36,8 @@ func divide(numbers ...float64) {
 }
 
 func handleInvalidInput() {
-	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Invalid input")
-	scanner.Scan()
+	bufio.NewScanner(os.Stdin).Scan()
 }
 
 func main() {
@@ -47,7 +46,7 @@ func main() {
 
 	for {
 		fmt.Print("Enter first number: ")
-		_, err := fmt.Scanf("%f", &num1)
+		_, err := fmt.Scanln(&num1)
 
 		if err != nil {
 			handleInvalidInput()
@@ -58,7 +57,7 @@ func main() {
 
 	for {
 		fmt.Print("Enter operator (+, -, *, /): ")
-		_, err := fmt.Scanf("%s", &operator)
+		_, err := fmt.Scanln(&operator)
 
 		if err != nil {
 			fmt.Println("Choose operator")
@@ -69,7 +68,7 @@ func main() {
 
 	for {
 		fmt.Print("Enter second number: ")
-		_, err := fmt.Scanf("%f", &num2)
+		_, err := fmt.Scanln(&num2)
 
 		if err != nil {
 			handleInvalidInput()
