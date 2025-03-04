@@ -40,7 +40,7 @@ func handleInvalidInput() {
 	bufio.NewScanner(os.Stdin).Scan()
 }
 
-func main() {
+func calculator() int32 {
 	var num1, num2 float64
 	var operator string
 
@@ -89,7 +89,26 @@ func main() {
 			log.Fatal("Error: Division by zero is not allowed.")
 		}
 		divide(num1, num2)
+	case "#":
+		return -1
 	default:
 		fmt.Println("Invalid operator!")
 	}
+
+	fmt.Println("Press Enter to continue...")
+	fmt.Scanln()
+
+	return 0
+}
+
+func main() {
+
+	for {
+		if calculator() == -1 {
+			break
+		}
+		fmt.Print("\033[H\033[2J")
+	}
+
+	fmt.Println("GOOD BYE")
 }
