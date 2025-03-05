@@ -87,7 +87,7 @@ func main() {
 
 			add(&todoList, itemName)
 		case "remove":
-			fmt.Println("Which item: ")
+			fmt.Print("Which item: ")
 			itemNumber, err := fmt.Scanln()
 
 			if err != nil {
@@ -97,7 +97,7 @@ func main() {
 
 			remove(itemNumber)
 		case "check":
-			fmt.Println("Which item: ")
+			fmt.Print("Which item: ")
 			itemNumber, err := fmt.Scanln()
 
 			if err != nil {
