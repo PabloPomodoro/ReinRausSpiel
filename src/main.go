@@ -16,7 +16,7 @@ type todoList struct {
 	items []item
 }
 
-func add(todoList *todoList, itemName string) {
+func add(todos *todoList, itemName string) {
 
 	item := item{
 		name:    itemName,
@@ -24,52 +24,69 @@ func add(todoList *todoList, itemName string) {
 		done:    false,
 	}
 
-	todoList.items = append(todoList.items, item)
+	todos.items = append(todos.items, item)
 }
 
-func check(itemNumber int) {
-
+func removeAtIndex(slice []item, index int) []item {
+	return append(slice[:index], slice[index+1:]...)
 }
 
-func remove(itemNumber int) {
+func remove(todos *todoList, itemNumber int) {
+	todos.items = removeAtIndex(todos.items, itemNumber)
+}
 
+func check(todos *todoList, itemNumber int) {
+
+	for i := range todos.items {
+		if i == itemNumber {
+			todos.items[i].done = true
+			break
+		}
+	}
 }
 
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
 
+func showTodoList(todos todoList) {
+	if len(todos.items) == 0 {
+		fmt.Println("No items yet!")
+	} else {
+		for i, item := range todos.items {
+			fmt.Printf("%d: %s, %s, %s\n",
+				i+1,
+				item.name,
+				item.dueDate.Format("2006-01-02"),
+				map[bool]string{true: "✓", false: "✘"}[item.done])
+		}
+	}
+	fmt.Println()
+}
+
+func printMessageAndWaitForInput(message string) {
+	fmt.Println(message)
+	var emptyInput string
+	fmt.Scanln(&emptyInput)
+}
+
 func main() {
 
 	clearScreen()
-	fmt.Println("Welcome to the TODO App!")
+	printMessageAndWaitForInput("Welcome to the TODO App!")
 
-	todoList := todoList{}
+	todos := todoList{}
 
 	var action string
 	for {
-		var emptyInput string
-		fmt.Scanln(&emptyInput)
 		clearScreen()
-
-		if len(todoList.items) == 0 {
-			fmt.Println("No items yet!")
-		} else {
-			for itemIndex, item := range todoList.items {
-				fmt.Printf("%d: %s, %s, %s\n",
-					itemIndex+1,
-					item.name,
-					item.dueDate.Format("2006-01-02"),
-					map[bool]string{true: "✓", false: "✘"}[item.done])
-			}
-		}
-		fmt.Println()
+		showTodoList(todos)
 
 		fmt.Println("Choose actions - add, remove, check, exit")
 		_, err := fmt.Scanln(&action)
 
 		if err != nil {
-			fmt.Println("Invalid action!")
+			printMessageAndWaitForInput("Invalid action!")
 			continue
 		}
 
@@ -81,44 +98,40 @@ func main() {
 			_, err := fmt.Scanln(&itemName)
 
 			if err != nil {
-				fmt.Println("Invalid item name!")
+				printMessageAndWaitForInput("Invalid item name!")
 				continue
 			}
 
-			add(&todoList, itemName)
+			add(&todos, itemName)
 		case "remove":
 			fmt.Print("Which item: ")
-			itemNumber, err := fmt.Scanln()
+			var itemNumber int
+			_, err := fmt.Scanln(&itemNumber)
 
 			if err != nil {
-				fmt.Println("Invalid item!")
+				printMessageAndWaitForInput("Invalid item!")
 				continue
 			}
 
-			remove(itemNumber)
+			remove(&todos, itemNumber-1)
 		case "check":
 			fmt.Print("Which item: ")
-			itemNumber, err := fmt.Scanln()
+			var itemNumber int
+			_, err := fmt.Scanln(&itemNumber)
 
 			if err != nil {
-				fmt.Println("Invalid item!")
+				printMessageAndWaitForInput("Invalid item!")
 				continue
 			}
 
-			check(itemNumber)
+			check(&todos, itemNumber-1)
 		case "exit":
-			goto exit
+			printMessageAndWaitForInput("Goodbye!")
+			clearScreen()
+			return
 		default:
-			fmt.Println("Invalid action!")
+			printMessageAndWaitForInput("Invalid action!")
 			continue
 		}
 	}
-
-exit:
-	fmt.Println("Goodbye!")
-
-	var emptyInput string
-	fmt.Scanln(&emptyInput)
-
-	clearScreen()
 }
